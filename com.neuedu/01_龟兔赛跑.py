@@ -85,33 +85,41 @@ def main():
      # 定义兔子
      rabbit=Rabbit()
 
-     bar=tqdm(range(END))
 
+     print("")
+     print("BANG  !!!!!AND THEY' RE OFF  !!!!!")
      while True:
-      #每隔一秒中执行一次
-      time.sleep(1)
+      # #每隔一秒中执行一次
+      time.sleep(.3)
       t=tortoise.run()
       h=rabbit.run()
+      print("")
 
-      # for t  in bar:
-      #      bar.set_description('乌龟的进度%d'%(t//END))
-      # for h in tqdm(range(END)):
-      #      pass
-
+      print("乌龟的进度:")
+      for t_line in range(t):
+          print("-",end="")
+      print("")
+      print("兔子的进度:")
+      for t_line in range(h):
+          print("-",end="")
       if t==h and t<70:
+          print("")
           print("乌龟咬兔子!!!--OUCH")
 
       if t>=END:
+          print("")
           print("TORTOISE WINS!!!YAY!!!")
           return
 
       if h>=END:
+          print("")
           print("Hare wins．Yush!!!")
           return
 
 
 
 if __name__ == '__main__':
+
     main()
 
 
@@ -147,4 +155,4 @@ if __name__ == '__main__':
 
 
 
-
+r
