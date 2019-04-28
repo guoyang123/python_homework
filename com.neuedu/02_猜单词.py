@@ -22,3 +22,73 @@ apple
 
 
 '''
+from random import  randint
+# 判断给定的字符，在指定的字符串中是否存在及存在的位置
+def position(str,c):
+    indexs=[]
+    if c in str:
+       _index=str.index(c)
+       indexs.append(_index)
+       beforeIndex = _index
+       while True:
+           substr=str[beforeIndex+1:len(str)]
+           if c in substr:
+               _index=substr.index(c)
+
+               beforeIndex+=_index+1
+               indexs.append(beforeIndex)
+           else :
+               return indexs
+
+    return indexs
+
+
+
+def  guessWord():
+     words=['apple','orange','banana','peach','lemon','pear','avocado','mango','mandarin','pomegranate']
+     index=randint(0,9)
+     word=words[index]
+     print(word)
+     preWord = ["-" for _ in range(len(word))]
+     for _ in range(len(preWord)):
+         print("-",end="")
+     print("")
+     total=5
+
+     while True:
+         print("")
+         c=input("请输入一个字符")
+         if len(c)>1:
+             total-=1
+             print("只能输入一个字符，浪费了一次机会还剩%d次机会"%(total))
+             continue
+         else:
+
+             indexsInword=position(word,c)
+             if indexsInword.__len__()>0:
+                 for replaceIndex in range(indexsInword.__len__()):
+                     preWord[indexsInword[replaceIndex]]=c
+
+             else :
+                 total-=1
+                 print("输出的字符错误，还剩%d次机会"%(total))
+         for x in range(len(preWord)):
+             print(preWord[x], end="")
+
+         if total==0:
+             print("game over,很遗憾，挑战失败!")
+             return
+
+         isSucc=True
+         for x in range(len(preWord)):
+             if preWord[x]!=word[x]:
+                 isSucc=False
+
+         if isSucc:
+             print("")
+             print("恭喜，挑战成功！！！")
+             return
+
+
+if __name__ == '__main__':
+    guessWord()
