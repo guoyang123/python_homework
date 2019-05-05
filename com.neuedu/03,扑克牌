@@ -1,0 +1,181 @@
+
+
+# 红桃
+HEART=1
+# 黑桃
+SPADE=2
+# 方块
+BLOCK=3
+# 草花
+FLOWER=4
+'''
+定义单张扑克类
+'''
+class SinglePoker(object):
+    def __init__(self,num,type):
+        self.num=num
+        self.type=type
+        if type== HEART:
+            self.desc="红桃"
+        elif type==SPADE:
+            self.desc="黑桃"
+        elif type== BLOCK:
+            self.desc="方块"
+        else:
+            self.desc="草花"
+
+        if num==1:
+            self.numdesc='A'
+        elif num==11:
+            self.numdesc = 'J'
+        elif num==12:
+            self.numdesc = 'Q'
+        elif num==13:
+            self.numdesc = 'K'
+        else :
+            self.numdesc=num
+
+
+    def __str__(self):
+        return self.desc+str(self.numdesc)
+
+'''
+定义扑克牌可迭代对象类
+'''
+class Pokers(object):
+    def __init__(self,pokers):
+        self.pokers=pokers
+
+    def __iter__(self):
+        return PokerIterator(self.pokers)
+
+
+
+class PokerIterator(object):
+    def __init__(self,pokers):
+        self.pokers=pokers
+        self.index=0
+    def __next__(self):
+        if self.index == len(self.pokers):
+            raise StopIteration
+        for pocker in self.pokers:
+            print(pocker,end=" ")
+            if self.index==12 or self.index==25 or self.index==38:
+                print(" ")
+            self.index += 1
+
+'''
+控制类
+'''
+
+
+from random import  shuffle
+from random import  randint
+
+
+
+
+
+class  Dealer(object):
+
+
+    '''
+    生成扑克牌方法
+    '''
+    def  generatorPocker(self):
+          pockers=[]
+          for type in range(1,5):
+              for num in range(1,14):
+                  pocker=SinglePoker(num,type)
+                  pockers.append(pocker)
+
+
+
+          return pockers
+    '''
+    洗牌
+    '''
+    def shuffle(self,pokers):
+        shuffle(pokers)
+
+    '''
+    发牌
+    '''
+    def licensing(self,pokers):
+       ps=[]
+       for i in range(5):
+          num= randint(0,51-i)
+          #print(num)
+          ps.append(pokers.pop(num))
+       return ps
+    '''
+     检查牌的类型
+     pokers:代表5张牌
+    '''
+    def typeofpokers(self,pokers):
+        dict={poker.num: poker.desc   for poker in pokers}
+        print(dict)
+        _len=len(dict)
+        re=self.isAlong(list(dict.keys()))
+        #print(re)
+        if _len==5: # 有可能是同花顺、同化、顺子、无对
+            if self.isAssimilation(dict.values()): #同花
+               if self.isAlong(list(dict.keys())): #顺子
+                   return "同花顺"
+               else:
+                   return "同花"
+            elif self.isAlong(list(dict.keys())): #顺子
+                return "顺子";
+            else:
+                return "无对";
+        pass
+
+    '''
+    判断是否为同花
+    True:同花
+    '''
+    def isAssimilation(self,values):
+        if len(values)==1:
+            return True
+        return False
+    '''
+    判断是否顺子
+    '''
+    def isAlong(self,keys):
+        #从小到大排序
+        keys.sort()
+        #间隔！=1则不是顺子
+        index=0
+        for i in keys:
+            # print(i,end=" ")
+            if index<=len(keys)-2:
+                if keys[index+1]-keys[index]!=1:
+                    return False
+            index+=1
+        return True
+if __name__ == '__main__':
+    dealer=Dealer()
+
+    pokers=dealer.generatorPocker()
+    pokersobj=Pokers(pokers)
+    #print(pokersobj)
+    for poker in pokersobj:
+        pass
+
+    print("")
+    print("洗牌以后:")
+    dealer.shuffle(pokersobj.pokers)
+    for poker in pokersobj:
+        pass
+
+    print("")
+    print("分到的一手牌是:")
+
+    ps=dealer.licensing(pokers)
+    for po in ps:
+        print(po,end=" ")
+
+    print("")
+    print("牌型:")
+    result=dealer.typeofpokers(ps)
+    print(result)
