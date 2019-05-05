@@ -112,23 +112,47 @@ class  Dealer(object):
      检查牌的类型
      pokers:代表5张牌
     '''
-    def typeofpokers(self,pokers):
-        dict={poker.num: poker.desc   for poker in pokers}
-        print(dict)
-        _len=len(dict)
-        re=self.isAlong(list(dict.keys()))
-        #print(re)
-        if _len==5: # 有可能是同花顺、同化、顺子、无对
-            if self.isAssimilation(dict.values()): #同花
-               if self.isAlong(list(dict.keys())): #顺子
+    def typeofpokers(self, pokers):
+        dict = {poker.num: poker.desc   for poker in pokers}
+
+        _len = len(dict)
+        if _len == 5:  # 有可能是同花顺、同化、顺子、无对
+            if self.isAssimilation(dict.values()):   # 同花
+               if self.isAlong(list(dict.keys())):   # 顺子
                    return "同花顺"
                else:
                    return "同花"
-            elif self.isAlong(list(dict.keys())): #顺子
-                return "顺子";
+            elif self.isAlong(list(dict.keys())):   # 顺子
+                return "顺子"
             else:
                 return "无对";
-        pass
+        if _len == 4:  # 包含一对
+            return "一对"
+        if _len == 3 or _len==2:  # 可能三条，两对 四条，满堂红
+            result=self.threeortwo(pokers)
+            if result==3:
+                return "三条"
+            elif result==2:
+                return "两对"
+            elif result==4:
+                return "四条"
+            else:
+                return "满堂红"
+
+
+    '''
+    判断是三条还是两对
+    return 3:三条 2： 两对
+    '''
+    def threeortwo(self,pokers):
+        dict={}
+        for poker in pokers:
+            if poker.num in dict.keys():
+               dict[poker.num]+=1
+            else:
+                dict[poker.num]=1
+
+        return max(list(dict.values()))
 
     '''
     判断是否为同花
@@ -179,3 +203,5 @@ if __name__ == '__main__':
     print("牌型:")
     result=dealer.typeofpokers(ps)
     print(result)
+
+    dealer.threeortwo(ps)
